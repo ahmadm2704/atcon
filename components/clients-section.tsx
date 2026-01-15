@@ -73,7 +73,7 @@ export function ClientsSection() {
                     <div className="relative w-full h-full">
                       <Image
                         src={client.logo_url}
-                        alt={client.name}
+                        alt={client.name || "Client Logo"}
                         fill
                         className="object-contain transition-all duration-300 transform group-hover:scale-110"
                       />

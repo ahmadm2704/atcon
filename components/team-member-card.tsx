@@ -18,7 +18,7 @@ export function TeamMemberCard({ id, name, position, bio, imageUrl, email, phone
       {/* Image */}
       <div className="relative w-full h-72 overflow-hidden rounded-lg bg-muted mb-4">
         <Image
-          src={imageUrl || "/placeholder.svg?height=400&width=400&query=professional portrait"}
+          src={imageUrl || `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=random&size=400`}
           alt={name}
           fill
           className="object-cover group-hover:scale-105 transition-transform duration-300"

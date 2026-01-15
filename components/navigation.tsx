@@ -3,6 +3,7 @@
 import Link from "next/link"
 import Image from "next/image"
 import { useState, useEffect } from "react"
+import { usePathname } from "next/navigation"
 import { Menu, X, Search } from "lucide-react"
 import { ModeToggle } from "@/components/mode-toggle"
 import { Button } from "@/components/ui/button"
@@ -11,6 +12,8 @@ import { ProjectsNav } from "@/components/projects-nav"
 export function Navigation() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
+  const pathname = usePathname()
+  const isHome = pathname === "/"
 
   useEffect(() => {
     const handleScroll = () => {
@@ -27,6 +30,10 @@ export function Navigation() {
     { label: "CONTACT US", href: "/contact" },
   ]
 
+  // Determine if we should use dark/solid styling
+  // We use dark style if scrolled OR if we are NOT on the home page
+  const useDarkStyle = scrolled || !isHome
+
   return (
     <nav
       className={`fixed top-0 w-full z-50 transition-all duration-500 ${scrolled
@@ -38,7 +45,7 @@ export function Navigation() {
         <div className="flex justify-between items-center">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-3 group">
-            <div className="w-40 h-16 relative flex items-center justify-start">
+            <div className={`relative flex items-center justify-start transition-all duration-300 ${scrolled ? "w-32 h-12" : "w-40 h-16"}`}>
               <Image
                 src="/logo.png"
                 alt="Atcon Logo"
@@ -52,25 +59,25 @@ export function Navigation() {
           {/* Desktop Nav */}
           <div className="hidden md:flex items-center gap-8">
             <Link href="/"
-              className={`text-sm font-bold font-heading tracking-widest hover:text-primary transition-colors uppercase ${scrolled ? "text-foreground dark:text-white" : "text-white"}`}
+              className={`text-sm font-bold font-heading tracking-widest hover:text-primary transition-colors uppercase ${useDarkStyle ? "text-foreground dark:text-white" : "text-white"}`}
             >
               Home
             </Link>
             <Link href="/team"
-              className={`text-sm font-bold font-heading tracking-widest hover:text-primary transition-colors uppercase ${scrolled ? "text-foreground dark:text-white" : "text-white"}`}
+              className={`text-sm font-bold font-heading tracking-widest hover:text-primary transition-colors uppercase ${useDarkStyle ? "text-foreground dark:text-white" : "text-white"}`}
             >
               Team
             </Link>
 
-            <ProjectsNav scrolled={scrolled} />
+            <ProjectsNav scrolled={useDarkStyle} />
 
             <Link href="/media"
-              className={`text-sm font-bold font-heading tracking-widest hover:text-primary transition-colors uppercase ${scrolled ? "text-foreground dark:text-white" : "text-white"}`}
+              className={`text-sm font-bold font-heading tracking-widest hover:text-primary transition-colors uppercase ${useDarkStyle ? "text-foreground dark:text-white" : "text-white"}`}
             >
               Media
             </Link>
             <Link href="/contact"
-              className={`text-sm font-bold font-heading tracking-widest hover:text-primary transition-colors uppercase ${scrolled ? "text-foreground dark:text-white" : "text-white"}`}
+              className={`text-sm font-bold font-heading tracking-widest hover:text-primary transition-colors uppercase ${useDarkStyle ? "text-foreground dark:text-white" : "text-white"}`}
             >
               Contact Us
             </Link>
@@ -78,7 +85,7 @@ export function Navigation() {
 
           {/* Desktop Right Items */}
           <div className="hidden md:flex items-center gap-4">
-            <ModeToggle className={scrolled ? "text-foreground dark:text-white" : "text-white"} />
+            <ModeToggle className={useDarkStyle ? "text-foreground dark:text-white" : "text-white"} />
             <Button className="font-bold tracking-wider bg-[var(--primary)] hover:bg-[var(--primary)]/90 text-white rounded-sm shadow-lg shadow-red-900/20">
               GET IN TOUCH
             </Button>
@@ -86,9 +93,9 @@ export function Navigation() {
 
           {/* Mobile Menu Button */}
           <div className="md:hidden flex items-center gap-4">
-            <ModeToggle className={scrolled ? "text-foreground dark:text-white" : "text-white"} />
+            <ModeToggle className={useDarkStyle ? "text-foreground dark:text-white" : "text-white"} />
             <button
-              className={`p-2 transition-colors ${scrolled ? "text-foreground dark:text-white" : "text-white"}`}
+              className={`p-2 transition-colors ${useDarkStyle ? "text-foreground dark:text-white" : "text-white"}`}
               onClick={() => setIsMenuOpen(!isMenuOpen)}
             >
               {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}

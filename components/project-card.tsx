@@ -13,42 +13,50 @@ interface ProjectCardProps {
 
 export function ProjectCard({ id, title, shortDescription, imageUrl, year, category }: ProjectCardProps) {
   return (
-    <Link href={`/projects/${id}`} className="block h-full">
-      <div className="group relative bg-card/60 backdrop-blur-md border border-white/5 rounded-sm overflow-hidden hover:border-primary/50 transition-all duration-700 h-full flex flex-col hover:shadow-2xl hover:shadow-primary/10">
-        {/* Image */}
-        <div className="relative w-full h-72 overflow-hidden bg-muted">
-          <Image
-            src={imageUrl || "/placeholder.svg?height=400&width=600&query=architecture project"}
-            alt={title}
-            fill
-            className="object-cover group-hover:scale-105 transition-transform duration-700"
-          />
-          {/* Overlay gradient on hover */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+    <Link href={`/projects/${id}`} className="block h-full group">
+      <div className="relative h-[450px] overflow-hidden rounded-xl bg-muted border border-border/50 shadow-sm transition-all duration-500 hover:shadow-2xl hover:shadow-primary/20">
+        {/* Background Image */}
+        <Image
+          src={imageUrl || "/placeholder.svg?height=800&width=600"}
+          alt={title}
+          fill
+          className="object-cover transition-transform duration-700 group-hover:scale-110 group-hover:rotate-1"
+        />
 
-          {category && (
-            <div className="absolute top-4 left-4">
-              <span className="text-xs font-bold font-heading tracking-widest text-white bg-black/50 backdrop-blur-sm px-3 py-1 rounded-sm border border-white/10 uppercase">
-                {category}
-              </span>
-            </div>
-          )}
-        </div>
+        {/* Gradient Overlay */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent opacity-60 group-hover:opacity-80 transition-opacity duration-500" />
 
-        {/* Content */}
-        <div className="flex-1 p-6 flex flex-col relative bg-card/40 backdrop-blur-md group-hover:bg-card/80 transition-all duration-500">
-          <div className="flex justify-between items-start mb-3">
-            <div className="w-8 h-0.5 bg-primary mb-4 transition-all duration-300 group-hover:w-16" />
-            {year && <span className="text-xs font-mono text-gray-500">{year}</span>}
+        {/* Floating Category Tag */}
+        {category && (
+          <div className="absolute top-4 right-4 z-20">
+            <span className="px-3 py-1 text-xs font-bold tracking-widest text-white uppercase bg-white/10 backdrop-blur-md border border-white/20 rounded-full shadow-lg">
+              {category}
+            </span>
           </div>
+        )}
 
-          <h3 className="text-xl font-heading font-bold text-white mb-3 line-clamp-2 group-hover:text-primary transition-colors">
-            {title}
-          </h3>
-          <p className="text-gray-400 text-sm mb-6 flex-1 line-clamp-2 leading-relaxed font-sans">{shortDescription}</p>
+        {/* Content Container - Slide Up Effect */}
+        <div className="absolute inset-0 flex flex-col justify-end p-8 text-white z-10 translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
+          <div className="bg-black/30 backdrop-blur-md p-6 rounded-xl border border-white/10 shadow-2xl group-hover:bg-black/50 transition-colors duration-500">
+            <div className="flex items-center gap-3 mb-3 text-primary/80 group-hover:text-primary transition-colors">
+              {year && <span className="text-sm font-mono tracking-wider">{year}</span>}
+              <div className="h-px flex-1 bg-gradient-to-r from-primary/50 to-transparent" />
+            </div>
 
-          <div className="flex items-center text-primary font-bold text-xs tracking-widest uppercase gap-2 group-hover:gap-3 transition-all">
-            View Project <ArrowRight className="w-3 h-3" />
+            <h3 className="text-2xl font-bold font-heading leading-tight mb-3 group-hover:text-primary transition-colors duration-300">
+              {title}
+            </h3>
+
+            <div className="grid grid-rows-[0fr] group-hover:grid-rows-[1fr] transition-[grid-template-rows] duration-500 ease-out">
+              <div className="overflow-hidden">
+                <p className="text-gray-300 text-sm leading-relaxed mb-4 opacity-0 group-hover:opacity-100 transition-opacity duration-700 delay-100">
+                  {shortDescription}
+                </p>
+                <div className="flex items-center text-xs font-bold uppercase tracking-widest text-primary gap-2">
+                  View Details <ArrowRight className="w-4 h-4" />
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
