@@ -23,9 +23,9 @@ export function Footer() {
           <div>
             <h4 className="text-lg font-heading font-bold text-foreground dark:text-white mb-6">Quick Links</h4>
             <ul className="space-y-4">
-              {['Home', 'About Us', 'Services', 'Projects', 'Contact'].map((item) => (
+              {['Home', 'Team', 'Projects', 'Media', 'Contact'].map((item) => (
                 <li key={item}>
-                  <Link href={`/${item.toLowerCase().replace(' ', '-')}`} className="text-muted-foreground dark:text-gray-400 hover:text-primary transition-colors">
+                  <Link href={item === 'Home' ? '/' : item === 'Contact' ? '/contact' : `/${item.toLowerCase()}`} className="text-muted-foreground dark:text-gray-400 hover:text-primary transition-colors">
                     {item}
                   </Link>
                 </li>
@@ -39,15 +39,15 @@ export function Footer() {
             <ul className="space-y-4">
               <li className="flex items-start gap-3 text-muted-foreground dark:text-gray-400">
                 <MapPin className="w-5 h-5 text-primary shrink-0 mt-1" />
-                <span>Office # 12, 2nd Floor, Al-Baber Centre, F-8 Markaz, Islamabad</span>
+                <span>1st Floor, Plaza No.55/F2, Sector E, Jinnah Boulevard, DHA II, ISB., Islamabad, Pakistan</span>
               </li>
               <li className="flex items-center gap-3 text-muted-foreground dark:text-gray-400">
                 <Phone className="w-5 h-5 text-primary shrink-0" />
-                <span>+92 300 1234567</span>
+                <span>+92 300 0171399</span>
               </li>
               <li className="flex items-center gap-3 text-muted-foreground dark:text-gray-400">
                 <Mail className="w-5 h-5 text-primary shrink-0" />
-                <span>info@atcon.pk</span>
+                <span>info@atcon.com</span>
               </li>
             </ul>
           </div>

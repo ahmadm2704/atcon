@@ -8,9 +8,10 @@ interface PageHeaderProps {
     backgroundImage?: string
 }
 
+
 export function PageHeader({ title, description, backgroundImage }: PageHeaderProps) {
     return (
-        <section className="relative w-full pt-32 pb-20 overflow-hidden bg-background">
+        <section className="relative w-full pt-28 md:pt-32 pb-12 md:pb-20 overflow-hidden bg-background">
             {/* Background with Gradient Overlay */}
             <div className="absolute inset-0 z-0">
                 <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-background to-background z-10" />
@@ -36,7 +37,7 @@ export function PageHeader({ title, description, backgroundImage }: PageHeaderPr
                         transition={{ delay: 0.2, duration: 0.8 }}
                         className="h-1 bg-gradient-to-r from-primary to-transparent mb-6"
                     />
-                    <h1 className="text-5xl md:text-7xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-foreground to-foreground/70 mb-6 tracking-tight">
+                    <h1 className="text-4xl md:text-7xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-foreground to-foreground/70 mb-4 md:mb-6 tracking-tight">
                         {title}
                     </h1>
                     {description && (
