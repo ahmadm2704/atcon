@@ -20,6 +20,7 @@ import {
 
 const menuItems = [
     { icon: LayoutGrid, label: "Dashboard", href: "/admin/dashboard" },
+    { icon: ImageIcon, label: "Hero Section", href: "/admin/hero" },
     { icon: Briefcase, label: "Projects", href: "/admin/projects" },
     { icon: Users, label: "Team Members", href: "/admin/team" },
     { icon: ImageIcon, label: "Media", href: "/admin/media" },

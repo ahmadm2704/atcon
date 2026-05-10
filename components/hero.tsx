@@ -33,46 +33,52 @@ export function Hero() {
     }
   }, [emblaApi, onSelect])
 
-  const slides = [
+  const [slides, setSlides] = useState<any[]>([])
+  const [isLoading, setIsLoading] = useState(true)
+
+  useEffect(() => {
+    const fetchSlides = async () => {
+      try {
+        const { createClient } = await import('@/lib/supabase')
+        const supabase = createClient()
+        const { data, error } = await supabase
+          .from("hero_slides")
+          .select("*")
+          .order("order_index", { ascending: true })
+
+        if (error) throw error
+        setSlides(data || [])
+      } catch (error) {
+        console.error("Error fetching hero slides:", error)
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
+    fetchSlides()
+  }, [])
+
+  const defaultSlides = [
     {
-      id: 1,
-      image: "/hero1.jpg",
-      title1: "SMART",
-      title2: "DESIGNS",
-      description: "Our commercial architectural designs are an embodiment of uncompromised luxury, a vast canvas of unique and high-end designs."
-    },
-    {
-      id: 2,
-      image: "/hero2.jpg",
-      title1: "SAFARI",
-      title2: "VIEW HEIGHTS",
-      description: "A designer residential project boasting a fusion of high-end design, contemporary architecture, modern amenities, and natural elements."
-    },
-    {
-      id: 3,
-      image: "/hero3.jpeg",
-      title1: "PREMIUM",
-      title2: "LIVING",
-      description: "Creating landmarks that stand the test of time with superior quality and engineering."
-    },
-    {
-      id: 4,
-      image: "/hero4.jpg",
-      title1: "MODERN",
-      title2: "INFRASTRUCTURE",
-      description: "Pioneering sustainable development with state-of-the-art engineering solutions for a better tomorrow."
+      id: "default-1",
+      image_url: "/hero1.jpg",
+      title1: "WELCOME TO",
+      title2: "ATCON",
+      description: "Please configure hero slides in the admin panel."
     }
   ]
+
+  const displaySlides = slides.length > 0 ? slides : defaultSlides
 
   return (
     <section className="relative w-full h-screen overflow-hidden bg-black font-sans">
       {/* Background Slides */}
       <div className="absolute inset-0 z-0" ref={emblaRef}>
         <div className="flex h-full">
-          {slides.map((slide) => (
+          {displaySlides.map((slide) => (
             <div key={slide.id} className="relative flex-[0_0_100%] min-w-0 h-full">
               <Image
-                src={slide.image}
+                src={slide.image_url || "/placeholder.svg"}
                 alt={slide.title1 + " " + slide.title2}
                 fill
                 className="object-cover opacity-90"
@@ -136,24 +142,26 @@ export function Hero() {
 
 
         {/* Dynamic Text Block - Strictly Bottom Left Corner & Small */}
-        <div className="absolute bottom-12 left-8 md:left-12 max-w-2xl" key={activeIndex}>
-          {/* Animated Title */}
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-black leading-none tracking-tighter uppercase font-heading select-none animate-in fade-in slide-in-from-bottom-4 duration-700">
-            <span className="text-[var(--primary)] mr-3 drop-shadow-lg inline-block">{slides[activeIndex].title1}</span>
-            <span className="text-white drop-shadow-lg inline-block">{slides[activeIndex].title2}</span>
-          </h1>
+        {displaySlides.length > 0 && displaySlides[activeIndex] && (
+          <div className="absolute bottom-12 left-8 md:left-12 max-w-2xl" key={activeIndex}>
+            {/* Animated Title */}
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-black leading-none tracking-tighter uppercase font-heading select-none animate-in fade-in slide-in-from-bottom-4 duration-700">
+              <span className="text-[var(--primary)] mr-3 drop-shadow-lg inline-block">{displaySlides[activeIndex].title1}</span>
+              <span className="text-white drop-shadow-lg inline-block">{displaySlides[activeIndex].title2}</span>
+            </h1>
 
-          {/* Animated Description */}
-          <p
-            className="text-base md:text-lg text-white/90 font-light leading-relaxed mt-4 max-w-xl drop-shadow-md animate-in fade-in slide-in-from-bottom-4 duration-700 delay-150"
-          >
-            {slides[activeIndex].description}
-          </p>
-        </div>
+            {/* Animated Description */}
+            <p
+              className="text-base md:text-lg text-white/90 font-light leading-relaxed mt-4 max-w-xl drop-shadow-md animate-in fade-in slide-in-from-bottom-4 duration-700 delay-150"
+            >
+              {displaySlides[activeIndex].description}
+            </p>
+          </div>
+        )}
 
         {/* Carousel Dots - Bottom Right */}
         <div className="absolute right-8 bottom-12 flex gap-3 z-30">
-          {slides.map((_, index) => (
+          {displaySlides.map((_, index) => (
             <button
               key={index}
               onClick={() => emblaApi?.scrollTo(index)}
