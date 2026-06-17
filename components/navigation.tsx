@@ -25,6 +25,7 @@ export function Navigation() {
 
   const navItems = [
     { label: "HOME", href: "/" },
+    { label: "PROJECTS UNDERTAKEN", href: "/projects" },
     { label: "TEAM", href: "/team" },
     { label: "MEDIA", href: "/media" },
     { label: "CONTACT US", href: "/contact" },
@@ -63,13 +64,14 @@ export function Navigation() {
             >
               Home
             </Link>
+
+            <ProjectsNav scrolled={useDarkStyle} />
+
             <Link href="/team"
               className={`text-sm font-bold font-heading tracking-widest hover:text-primary transition-colors uppercase ${useDarkStyle ? "text-foreground dark:text-white" : "text-white"}`}
             >
               Team
             </Link>
-
-            <ProjectsNav scrolled={useDarkStyle} />
 
             <Link href="/media"
               className={`text-sm font-bold font-heading tracking-widest hover:text-primary transition-colors uppercase ${useDarkStyle ? "text-foreground dark:text-white" : "text-white"}`}

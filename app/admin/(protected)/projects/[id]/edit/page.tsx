@@ -7,9 +7,10 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { createClient } from "@/lib/supabase"
-import { ArrowLeft, Loader2 } from "lucide-react"
+import { ArrowLeft, Loader2, X } from "lucide-react"
 import Link from "next/link"
 import { ImageUpload } from "@/components/image-upload"
+import Image from "next/image"
 
 const CATEGORIES = [
     "Residential",
@@ -27,7 +28,16 @@ export default function EditProjectPage() {
     const params = useParams()
     const [isLoading, setIsLoading] = useState(false)
     const [isFetching, setIsFetching] = useState(true)
-    const [formData, setFormData] = useState({
+    const [formData, setFormData] = useState<{
+        title: string
+        short_description: string
+        description: string
+        image_url: string
+        category: string
+        year: number
+        status: string
+        gallery_images: string[]
+    }>({
         title: "",
         short_description: "",
         description: "",
@@ -35,6 +45,7 @@ export default function EditProjectPage() {
         category: "",
         year: new Date().getFullYear(),
         status: "completed",
+        gallery_images: [],
     })
 
     useEffect(() => {
@@ -57,6 +68,7 @@ export default function EditProjectPage() {
                         category: data.category || "",
                         year: data.year || new Date().getFullYear(),
                         status: data.status || "completed",
+                        gallery_images: data.gallery_images || [],
                     })
                 }
             } catch (error) {
@@ -81,6 +93,15 @@ export default function EditProjectPage() {
         }))
     }
 
+    const handleAddGalleryImage = (url: string) => {
+        if (url) {
+            setFormData(prev => ({
+                ...prev,
+                gallery_images: [...prev.gallery_images, url]
+            }))
+        }
+    }
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
         setIsLoading(true)
@@ -97,6 +118,7 @@ export default function EditProjectPage() {
                     category: formData.category,
                     year: formData.year,
                     status: formData.status,
+                    gallery_images: formData.gallery_images,
                     updated_at: new Date().toISOString(),
                 })
                 .eq("id", params.id)
@@ -229,6 +251,46 @@ export default function EditProjectPage() {
                         onChange={(url) => setFormData(prev => ({ ...prev, image_url: url }))}
                         disabled={isLoading}
                     />
+                </div>
+
+                <div className="space-y-4">
+                    <Label>Gallery Images</Label>
+                    {formData.gallery_images.length > 0 && (
+                        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                            {formData.gallery_images.map((url, index) => (
+                                <div key={index} className="relative w-full h-32 rounded-lg overflow-hidden border border-border bg-muted group">
+                                    <Image
+                                        src={url}
+                                        fill
+                                        className="object-cover"
+                                        alt={`Gallery image ${index + 1}`}
+                                    />
+                                    <div className="absolute top-2 right-2 z-10 opacity-0 group-hover:opacity-100 transition-opacity">
+                                        <Button
+                                            type="button"
+                                            onClick={() => setFormData(prev => ({
+                                                ...prev,
+                                                gallery_images: prev.gallery_images.filter((_, i) => i !== index)
+                                            }))}
+                                            variant="destructive"
+                                            size="icon"
+                                            className="h-8 w-8"
+                                        >
+                                            <X className="h-4 w-4" />
+                                        </Button>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    )}
+                    <div className="border border-dashed border-border rounded-lg p-4 bg-muted/20">
+                        <span className="text-sm font-medium text-muted-foreground block mb-2">Add Gallery Image</span>
+                        <ImageUpload
+                            value=""
+                            onChange={handleAddGalleryImage}
+                            disabled={isLoading}
+                        />
+                    </div>
                 </div>
 
                 <div className="flex justify-end pt-4">
