@@ -103,8 +103,6 @@ export default function AdminLoginPage() {
               {isLoading ? "Logging in..." : "Log In"}
             </Button>
           </form>
-
-          <p className="text-center text-sm text-foreground/60 mt-6">Demo credentials: admin@atcon.com / password123</p>
         </div>
       </div>
     </div>

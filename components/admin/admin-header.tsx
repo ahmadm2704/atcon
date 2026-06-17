@@ -81,9 +81,9 @@ export function AdminHeader({ onMenuClick }: AdminHeaderProps) {
                                     </div>
                                 </DropdownMenuLabel>
                                 <DropdownMenuSeparator />
-                                <DropdownMenuItem>
+                                <DropdownMenuItem onClick={() => router.push("/admin/change-password")}>
                                     <User className="mr-2 h-4 w-4" />
-                                    <span>Profile</span>
+                                    <span>Change Password</span>
                                 </DropdownMenuItem>
                                 <DropdownMenuItem onClick={handleLogout} className="text-red-500 focus:text-red-500">
                                     <LogOut className="mr-2 h-4 w-4" />

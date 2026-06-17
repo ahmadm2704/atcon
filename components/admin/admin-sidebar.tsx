@@ -15,7 +15,8 @@ import {
     Briefcase,
     Star,
     ShieldCheck,
-    Building2
+    Building2,
+    KeyRound
 } from "lucide-react"
 
 const menuItems = [
@@ -29,6 +30,7 @@ const menuItems = [
     { icon: ShieldCheck, label: "Why Choose", href: "/admin/why-choose" },
     { icon: Star, label: "Testimonials", href: "/admin/testimonials" },
     { icon: MessageSquare, label: "Messages", href: "/admin/messages" },
+    { icon: KeyRound, label: "Change Password", href: "/admin/change-password" },
 ]
 
 interface AdminSidebarProps {
