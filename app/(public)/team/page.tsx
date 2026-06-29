@@ -18,9 +18,21 @@ interface TeamMember {
   social_links?: Record<string, string>
 }
 
+const DEPARTMENTS = [
+  "Planning & Scheduling",
+  "Design Wing",
+  "Construction",
+  "Estimation",
+  "Procurement",
+  "Account",
+  "Store",
+  "Office"
+]
+
 export default function TeamPage() {
   const [teamMembers, setTeamMembers] = useState<TeamMember[]>([])
   const [isLoading, setIsLoading] = useState(true)
+  const [selectedDept, setSelectedDept] = useState<string>("All")
 
   useEffect(() => {
     const fetchTeamMembers = async () => {
@@ -144,6 +156,33 @@ export default function TeamPage() {
           <div className="w-20 h-1 bg-primary mx-auto mt-4" />
         </div>
 
+        {/* Department Filter Tabs */}
+        {!isLoading && otherMembers.length > 0 && (
+          <div className="flex flex-wrap justify-center gap-2 md:gap-3 mb-16 max-w-5xl mx-auto">
+            {["All", ...DEPARTMENTS].map((dept) => {
+              const count = dept === "All" 
+                ? otherMembers.length 
+                : otherMembers.filter(m => m.department === dept).length;
+              
+              if (count === 0 && dept !== "All") return null;
+
+              return (
+                <button
+                  key={dept}
+                  onClick={() => setSelectedDept(dept)}
+                  className={`px-5 py-2.5 rounded-full text-xs font-bold font-heading tracking-wider uppercase transition-all duration-300 cursor-pointer ${
+                    selectedDept === dept
+                      ? "bg-primary text-white shadow-lg shadow-red-900/20 scale-105"
+                      : "bg-muted/30 text-foreground/75 border border-border/50 hover:bg-muted/60 hover:text-foreground"
+                  }`}
+                >
+                  {dept} <span className={`text-[10px] ml-1 opacity-70 ${selectedDept === dept ? "text-white/80" : "text-muted-foreground"}`}>({count})</span>
+                </button>
+              );
+            })}
+          </div>
+        )}
+
         {isLoading ? (
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
             {[1, 2, 3, 4].map((i) => (
@@ -156,69 +195,53 @@ export default function TeamPage() {
           </div>
         ) : otherMembers.length > 0 ? (
           <div className="space-y-16">
-            {[
-              "Planning & Scheduling",
-              "Design Wing",
-              "Construction",
-              "Estimation",
-              "Procurement",
-              "Account",
-              "Store",
-              "Office"
-            ].map((dept) => {
-              const deptMembers = otherMembers.filter(m => m.department === dept)
-              if (deptMembers.length === 0) return null
+            {DEPARTMENTS
+              .filter((dept) => selectedDept === "All" || selectedDept === dept)
+              .map((dept) => {
+                const deptMembers = otherMembers.filter(m => m.department === dept)
+                if (deptMembers.length === 0) return null
 
-              return (
-                <div key={dept} className="space-y-8">
-                  <div className="flex items-center gap-4">
-                    <h3 className="text-2xl font-bold text-foreground tracking-widest font-heading uppercase text-primary">
-                      {dept}
-                    </h3>
-                    <div className="flex-1 h-[1px] bg-border/40" />
+                return (
+                  <div key={dept} className="space-y-8">
+                    <div className="flex items-center gap-4">
+                      <h3 className="text-2xl font-bold text-foreground tracking-widest font-heading uppercase text-primary">
+                        {dept}
+                      </h3>
+                      <div className="flex-1 h-[1px] bg-border/40" />
+                    </div>
+
+                    <motion.div
+                      variants={containerVariants}
+                      initial="hidden"
+                      whileInView="show"
+                      viewport={{ once: true, margin: "-100px" }}
+                      className="grid md:grid-cols-2 lg:grid-cols-4 gap-8"
+                    >
+                      {deptMembers.map((member) => (
+                        <motion.div key={member.id} variants={itemVariants}>
+                          <TeamMemberCard
+                            id={member.id}
+                            name={member.name}
+                            position={member.position}
+                            bio={member.bio}
+                            imageUrl={member.image_url}
+                            email={member.email}
+                            phone={member.phone}
+                            socialLinks={member.social_links}
+                          />
+                        </motion.div>
+                      ))}
+                    </motion.div>
                   </div>
-
-                  <motion.div
-                    variants={containerVariants}
-                    initial="hidden"
-                    whileInView="show"
-                    viewport={{ once: true, margin: "-100px" }}
-                    className="grid md:grid-cols-2 lg:grid-cols-4 gap-8"
-                  >
-                    {deptMembers.map((member) => (
-                      <motion.div key={member.id} variants={itemVariants}>
-                        <TeamMemberCard
-                          id={member.id}
-                          name={member.name}
-                          position={member.position}
-                          bio={member.bio}
-                          imageUrl={member.image_url}
-                          email={member.email}
-                          phone={member.phone}
-                          socialLinks={member.social_links}
-                        />
-                      </motion.div>
-                    ))}
-                  </motion.div>
-                </div>
-              )
-            })}
+                )
+              })}
 
             {/* Uncategorized / General Fallback */}
-            {(() => {
+            {selectedDept === "All" && (() => {
               const uncategorized = otherMembers.filter(
                 (m) =>
                   !m.department ||
-                  ![
-                    "Planning & Scheduling",
-                    "Design Wing",
-                    "Construction",
-                    "Estimation",
-                    "Procurement",
-                    "Account",
-                    "Store",
-                    "Office"
-                  ].includes(m.department)
+                  !DEPARTMENTS.includes(m.department)
               )
               if (uncategorized.length === 0) return null
 
