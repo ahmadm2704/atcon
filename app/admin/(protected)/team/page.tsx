@@ -11,6 +11,7 @@ interface TeamMember {
   id: string
   name: string
   position: string
+  department?: string
   image_url?: string
   order_index: number
 }
@@ -251,7 +252,14 @@ export default function AdminTeamPage() {
                   {/* Info */}
                   <div className="flex-1 min-w-0">
                     <h3 className="font-bold text-foreground truncate">{member.name}</h3>
-                    <p className="text-sm text-foreground/60 truncate">{member.position}</p>
+                    <div className="flex flex-wrap gap-2 items-center mt-1">
+                      <span className="text-sm text-foreground/60 truncate">{member.position}</span>
+                      {member.department && (
+                        <span className="text-[10px] uppercase tracking-wider bg-primary/10 text-primary px-2 py-0.5 rounded font-bold">
+                          {member.department}
+                        </span>
+                      )}
+                    </div>
                   </div>
 
                   {/* Actions */}

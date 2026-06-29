@@ -16,6 +16,7 @@ export default function EditTeamMemberPage({ params }: { params: Promise<{ id: s
   const [formData, setFormData] = useState({
     name: "",
     position: "",
+    department: "Construction",
     bio: "",
     image_url: "",
     email: "",
@@ -40,6 +41,7 @@ export default function EditTeamMemberPage({ params }: { params: Promise<{ id: s
           setFormData({
             name: data.name || "",
             position: data.position || "",
+            department: data.department || "Construction",
             bio: data.bio || "",
             image_url: data.image_url || "",
             email: data.email || "",
@@ -57,7 +59,7 @@ export default function EditTeamMemberPage({ params }: { params: Promise<{ id: s
     fetchMember()
   }, [id])
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target
     setFormData((prev) => ({
       ...prev,
@@ -77,6 +79,7 @@ export default function EditTeamMemberPage({ params }: { params: Promise<{ id: s
         .update({
           name: formData.name,
           position: formData.position,
+          department: formData.department,
           bio: formData.bio,
           image_url: formData.image_url,
           email: formData.email,
@@ -122,7 +125,7 @@ export default function EditTeamMemberPage({ params }: { params: Promise<{ id: s
             </div>
           )}
 
-          <div className="grid md:grid-cols-2 gap-6">
+          <div className="grid md:grid-cols-3 gap-6">
             <div>
               <label className="block text-sm font-medium text-foreground mb-2">Name *</label>
               <input
@@ -145,6 +148,26 @@ export default function EditTeamMemberPage({ params }: { params: Promise<{ id: s
                 required
                 className="w-full px-4 py-2 border border-border rounded-lg bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
               />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-foreground mb-2">Department *</label>
+              <select
+                name="department"
+                value={formData.department}
+                onChange={handleChange}
+                required
+                className="w-full px-4 py-2 border border-border rounded-lg bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+              >
+                <option value="Planning & Scheduling">Planning & Scheduling</option>
+                <option value="Design Wing">Design Wing</option>
+                <option value="Construction">Construction</option>
+                <option value="Estimation">Estimation</option>
+                <option value="Procurement">Procurement</option>
+                <option value="Account">Account</option>
+                <option value="Store">Store</option>
+                <option value="Office">Office</option>
+              </select>
             </div>
           </div>
 

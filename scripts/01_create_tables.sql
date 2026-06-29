@@ -41,6 +41,7 @@ CREATE TABLE IF NOT EXISTS team_members (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   name VARCHAR(255) NOT NULL,
   position VARCHAR(255) NOT NULL,
+  department VARCHAR(255),
   bio TEXT,
   image_url VARCHAR(500),
   email VARCHAR(255),

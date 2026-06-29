@@ -15,13 +15,14 @@ export default function NewTeamMemberPage() {
   const [formData, setFormData] = useState({
     name: "",
     position: "",
+    department: "Construction",
     bio: "",
     image_url: "",
     email: "",
     phone: "",
   })
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target
     setFormData((prev) => ({
       ...prev,
@@ -66,7 +67,7 @@ export default function NewTeamMemberPage() {
 
       <div className="max-w-4xl mx-auto p-6">
         <form onSubmit={handleSubmit} className="bg-card border border-border rounded-lg p-8 space-y-6">
-          <div className="grid md:grid-cols-2 gap-6">
+          <div className="grid md:grid-cols-3 gap-6">
             <div>
               <label className="block text-sm font-medium text-foreground mb-2">Name *</label>
               <input
@@ -89,6 +90,26 @@ export default function NewTeamMemberPage() {
                 required
                 className="w-full px-4 py-2 border border-border rounded-lg bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
               />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-foreground mb-2">Department *</label>
+              <select
+                name="department"
+                value={formData.department}
+                onChange={handleChange}
+                required
+                className="w-full px-4 py-2 border border-border rounded-lg bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+              >
+                <option value="Planning & Scheduling">Planning & Scheduling</option>
+                <option value="Design Wing">Design Wing</option>
+                <option value="Construction">Construction</option>
+                <option value="Estimation">Estimation</option>
+                <option value="Procurement">Procurement</option>
+                <option value="Account">Account</option>
+                <option value="Store">Store</option>
+                <option value="Office">Office</option>
+              </select>
             </div>
           </div>
 

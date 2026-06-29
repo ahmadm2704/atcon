@@ -10,6 +10,7 @@ interface TeamMember {
   id: string
   name: string
   position: string
+  department?: string
   bio?: string
   image_url?: string
   email?: string
@@ -154,28 +155,108 @@ export default function TeamPage() {
             ))}
           </div>
         ) : otherMembers.length > 0 ? (
-          <motion.div
-            variants={containerVariants}
-            initial="hidden"
-            whileInView="show"
-            viewport={{ once: true, margin: "-100px" }}
-            className="grid md:grid-cols-2 lg:grid-cols-4 gap-8"
-          >
-            {otherMembers.map((member) => (
-              <motion.div key={member.id} variants={itemVariants}>
-                <TeamMemberCard
-                  id={member.id}
-                  name={member.name}
-                  position={member.position}
-                  bio={member.bio}
-                  imageUrl={member.image_url}
-                  email={member.email}
-                  phone={member.phone}
-                  socialLinks={member.social_links}
-                />
-              </motion.div>
-            ))}
-          </motion.div>
+          <div className="space-y-16">
+            {[
+              "Planning & Scheduling",
+              "Design Wing",
+              "Construction",
+              "Estimation",
+              "Procurement",
+              "Account",
+              "Store",
+              "Office"
+            ].map((dept) => {
+              const deptMembers = otherMembers.filter(m => m.department === dept)
+              if (deptMembers.length === 0) return null
+
+              return (
+                <div key={dept} className="space-y-8">
+                  <div className="flex items-center gap-4">
+                    <h3 className="text-2xl font-bold text-foreground tracking-widest font-heading uppercase text-primary">
+                      {dept}
+                    </h3>
+                    <div className="flex-1 h-[1px] bg-border/40" />
+                  </div>
+
+                  <motion.div
+                    variants={containerVariants}
+                    initial="hidden"
+                    whileInView="show"
+                    viewport={{ once: true, margin: "-100px" }}
+                    className="grid md:grid-cols-2 lg:grid-cols-4 gap-8"
+                  >
+                    {deptMembers.map((member) => (
+                      <motion.div key={member.id} variants={itemVariants}>
+                        <TeamMemberCard
+                          id={member.id}
+                          name={member.name}
+                          position={member.position}
+                          bio={member.bio}
+                          imageUrl={member.image_url}
+                          email={member.email}
+                          phone={member.phone}
+                          socialLinks={member.social_links}
+                        />
+                      </motion.div>
+                    ))}
+                  </motion.div>
+                </div>
+              )
+            })}
+
+            {/* Uncategorized / General Fallback */}
+            {(() => {
+              const uncategorized = otherMembers.filter(
+                (m) =>
+                  !m.department ||
+                  ![
+                    "Planning & Scheduling",
+                    "Design Wing",
+                    "Construction",
+                    "Estimation",
+                    "Procurement",
+                    "Account",
+                    "Store",
+                    "Office"
+                  ].includes(m.department)
+              )
+              if (uncategorized.length === 0) return null
+
+              return (
+                <div className="space-y-8">
+                  <div className="flex items-center gap-4">
+                    <h3 className="text-2xl font-bold text-foreground tracking-widest font-heading uppercase text-primary">
+                      General & Other
+                    </h3>
+                    <div className="flex-1 h-[1px] bg-border/40" />
+                  </div>
+
+                  <motion.div
+                    variants={containerVariants}
+                    initial="hidden"
+                    whileInView="show"
+                    viewport={{ once: true, margin: "-100px" }}
+                    className="grid md:grid-cols-2 lg:grid-cols-4 gap-8"
+                  >
+                    {uncategorized.map((member) => (
+                      <motion.div key={member.id} variants={itemVariants}>
+                        <TeamMemberCard
+                          id={member.id}
+                          name={member.name}
+                          position={member.position}
+                          bio={member.bio}
+                          imageUrl={member.image_url}
+                          email={member.email}
+                          phone={member.phone}
+                          socialLinks={member.social_links}
+                        />
+                      </motion.div>
+                    ))}
+                  </motion.div>
+                </div>
+              )
+            })()}
+          </div>
         ) : (
           <div className="text-center py-20">
             <p className="text-xl text-foreground/50">No other team members found.</p>
