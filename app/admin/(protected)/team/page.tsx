@@ -16,11 +16,23 @@ interface TeamMember {
   order_index: number
 }
 
+const DEPARTMENTS = [
+  "Planning & Scheduling",
+  "Design Wing",
+  "Construction",
+  "Estimation",
+  "Procurement",
+  "Account",
+  "Store",
+  "Office"
+]
+
 export default function AdminTeamPage() {
   const [teamMembers, setTeamMembers] = useState<TeamMember[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [isSaving, setIsSaving] = useState(false)
   const [saveSuccess, setSaveSuccess] = useState(false)
+  const [selectedDept, setSelectedDept] = useState<string>("All")
 
   // Drag and drop states
   const [draggedIndex, setDraggedIndex] = useState<number | null>(null)
@@ -174,7 +186,42 @@ export default function AdminTeamPage() {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto p-6">
+      <div className="max-w-7xl mx-auto p-6 space-y-6">
+        {/* Department Filter Tabs */}
+        {!isLoading && teamMembers.length > 0 && (
+          <div className="flex flex-wrap gap-2 max-w-5xl">
+            {["All", ...DEPARTMENTS].map((dept) => {
+              const count = dept === "All" 
+                ? teamMembers.length 
+                : teamMembers.filter(m => m.department === dept).length;
+              
+              if (count === 0 && dept !== "All") return null;
+
+              return (
+                <button
+                  key={dept}
+                  onClick={() => setSelectedDept(dept)}
+                  className={`px-4 py-2 rounded-full text-xs font-bold font-heading tracking-wide uppercase transition-all duration-300 cursor-pointer border ${
+                    selectedDept === dept
+                      ? "bg-primary text-white border-primary shadow-md"
+                      : "bg-muted/30 text-foreground/75 border-border/50 hover:bg-muted/60"
+                  }`}
+                >
+                  {dept} <span className="text-[10px] ml-1 opacity-70">({count})</span>
+                </button>
+              );
+            })}
+          </div>
+        )}
+
+        {/* Warning Banner when filtering is active */}
+        {selectedDept !== "All" && (
+          <div className="text-sm text-muted-foreground bg-muted/20 border border-border/40 p-3 rounded-lg flex items-center gap-2">
+            <span>ℹ️</span>
+            <span>Reordering is disabled while filtering by department. Select <strong>"All"</strong> to enable drag-and-drop ordering.</span>
+          </div>
+        )}
+
         {isLoading ? (
           <div className="space-y-4">
             {[1, 2, 3, 4].map((i) => (
@@ -183,59 +230,64 @@ export default function AdminTeamPage() {
           </div>
         ) : teamMembers.length > 0 ? (
           <div className="space-y-3">
-            {teamMembers.map((member, index) => {
-              const isDragging = draggedIndex === index
-              const isOver = draggedOverIndex === index
-              
-              return (
-                <div
-                  key={member.id}
-                  draggable={!isSaving}
-                  onDragStart={(e) => handleDragStart(e, index)}
-                  onDragOver={(e) => handleDragOver(e, index)}
-                  onDrop={(e) => handleDrop(e, index)}
-                  className={`bg-card border rounded-lg p-4 flex items-center gap-4 transition-all duration-200 select-none ${
-                    isDragging ? "opacity-40 scale-[0.98] border-dashed border-primary" : "border-border"
-                  } ${
-                    isOver ? "border-t-4 border-t-primary pt-6 bg-muted/30" : ""
-                  } hover:shadow-md`}
-                >
-                  {/* Grip & Arrows */}
-                  <div className="flex items-center gap-2">
-                    {/* Desktop Grip */}
-                    <div 
-                      className="cursor-grab active:cursor-grabbing p-1 hover:bg-muted rounded text-muted-foreground transition-colors hidden md:block"
-                      title="Drag to reorder"
-                    >
-                      <GripVertical className="w-5 h-5" />
+            {teamMembers
+              .filter(m => selectedDept === "All" || m.department === selectedDept)
+              .map((member, index) => {
+                const isDragging = draggedIndex === index
+                const isOver = draggedOverIndex === index
+                const isSortingEnabled = selectedDept === "All"
+                
+                return (
+                  <div
+                    key={member.id}
+                    draggable={isSortingEnabled && !isSaving}
+                    onDragStart={(e) => handleDragStart(e, index)}
+                    onDragOver={(e) => handleDragOver(e, index)}
+                    onDrop={(e) => handleDrop(e, index)}
+                    className={`bg-card border rounded-lg p-4 flex items-center gap-4 transition-all duration-200 select-none ${
+                      isDragging ? "opacity-40 scale-[0.98] border-dashed border-primary" : "border-border"
+                    } ${
+                      isOver ? "border-t-4 border-t-primary pt-6 bg-muted/30" : ""
+                    } hover:shadow-md`}
+                  >
+                    {/* Grip & Arrows */}
+                    <div className="flex items-center gap-2">
+                      {/* Desktop Grip */}
+                      {isSortingEnabled && (
+                        <div 
+                          className="cursor-grab active:cursor-grabbing p-1 hover:bg-muted rounded text-muted-foreground transition-colors hidden md:block"
+                          title="Drag to reorder"
+                        >
+                          <GripVertical className="w-5 h-5" />
+                        </div>
+                      )}
+  
+                      {/* Up/Down Arrows */}
+                      <div className="flex flex-col gap-0.5">
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="icon"
+                          className="h-7 w-7 text-muted-foreground hover:text-foreground hover:bg-muted disabled:opacity-30"
+                          disabled={!isSortingEnabled || index === 0 || isSaving}
+                          onClick={() => handleMove(index, "up")}
+                          title="Move Up"
+                        >
+                          <ChevronUp className="w-4 h-4" />
+                        </Button>
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="icon"
+                          className="h-7 w-7 text-muted-foreground hover:text-foreground hover:bg-muted disabled:opacity-30"
+                          disabled={!isSortingEnabled || index === teamMembers.length - 1 || isSaving}
+                          onClick={() => handleMove(index, "down")}
+                          title="Move Down"
+                        >
+                          <ChevronDown className="w-4 h-4" />
+                        </Button>
+                      </div>
                     </div>
-
-                    {/* Up/Down Arrows */}
-                    <div className="flex flex-col gap-0.5">
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        size="icon"
-                        className="h-7 w-7 text-muted-foreground hover:text-foreground hover:bg-muted disabled:opacity-30"
-                        disabled={index === 0 || isSaving}
-                        onClick={() => handleMove(index, "up")}
-                        title="Move Up"
-                      >
-                        <ChevronUp className="w-4 h-4" />
-                      </Button>
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        size="icon"
-                        className="h-7 w-7 text-muted-foreground hover:text-foreground hover:bg-muted disabled:opacity-30"
-                        disabled={index === teamMembers.length - 1 || isSaving}
-                        onClick={() => handleMove(index, "down")}
-                        title="Move Down"
-                      >
-                        <ChevronDown className="w-4 h-4" />
-                      </Button>
-                    </div>
-                  </div>
 
                   {/* Avatar */}
                   <div className="w-16 h-16 rounded-lg overflow-hidden bg-muted flex-shrink-0 relative">
