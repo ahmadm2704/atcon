@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react"
 import { Button } from "@/components/ui/button"
 import { createClient } from "@/lib/supabase"
-import { Plus, Edit2, Trash2 } from "lucide-react"
+import { Plus, Edit2, Trash2, ArrowUp, ArrowDown } from "lucide-react"
 import Link from "next/link"
 import Image from "next/image"
 
@@ -14,6 +14,7 @@ interface Project {
   image_url: string
   category?: string
   year?: number
+  order_index?: number
 }
 
 export default function AdminProjectsPage() {
@@ -53,6 +54,34 @@ export default function AdminProjectsPage() {
     }
   }
 
+  const handleMove = async (index: number, direction: 'up' | 'down') => {
+    if (direction === 'up' && index === 0) return;
+    if (direction === 'down' && index === projects.length - 1) return;
+
+    const newProjects = [...projects];
+    const swapIndex = direction === 'up' ? index - 1 : index + 1;
+    
+    const itemA = newProjects[index];
+    const itemB = newProjects[swapIndex];
+
+    const orderA = itemA.order_index ?? index;
+    const orderB = itemB.order_index ?? swapIndex;
+
+    itemA.order_index = orderB;
+    itemB.order_index = orderA;
+
+    [newProjects[index], newProjects[swapIndex]] = [itemB, itemA];
+    setProjects(newProjects);
+
+    try {
+      const supabase = createClient();
+      await supabase.from("projects").update({ order_index: orderB }).eq("id", itemA.id);
+      await supabase.from("projects").update({ order_index: orderA }).eq("id", itemB.id);
+    } catch (error) {
+      console.error("Error updating order:", error);
+    }
+  }
+
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
@@ -81,8 +110,30 @@ export default function AdminProjectsPage() {
           </div>
         ) : projects.length > 0 ? (
           <div className="space-y-4">
-            {projects.map((project) => (
+            {projects.map((project, index) => (
               <div key={project.id} className="bg-card border border-border rounded-lg p-4 flex items-center gap-4">
+                {/* Reorder Handles */}
+                <div className="flex flex-col gap-1">
+                  <Button 
+                    variant="ghost" 
+                    size="icon" 
+                    className="h-6 w-6" 
+                    disabled={index === 0}
+                    onClick={() => handleMove(index, 'up')}
+                  >
+                    <ArrowUp className="w-4 h-4" />
+                  </Button>
+                  <Button 
+                    variant="ghost" 
+                    size="icon" 
+                    className="h-6 w-6" 
+                    disabled={index === projects.length - 1}
+                    onClick={() => handleMove(index, 'down')}
+                  >
+                    <ArrowDown className="w-4 h-4" />
+                  </Button>
+                </div>
+
                 {/* Thumbnail */}
                 <div className="w-24 h-24 rounded-lg overflow-hidden bg-muted flex-shrink-0">
                   <Image

@@ -227,7 +227,7 @@ export default function ProjectDetailPage() {
                   <div
                     key={idx}
                     onClick={() => setActiveImage(image)}
-                    className="relative w-full aspect-[4/3] rounded-lg overflow-hidden border border-border bg-muted cursor-pointer group shadow-md hover:shadow-xl hover:border-primary/50 transition-all duration-300"
+                    className="relative w-full aspect-square rounded-lg overflow-hidden border border-border bg-muted cursor-pointer group shadow-md hover:shadow-xl hover:border-primary/50 transition-all duration-300"
                   >
                     <Image
                       src={image}

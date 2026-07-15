@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { createClient } from "@/lib/supabase"
-import { ArrowLeft, Loader2, X } from "lucide-react"
+import { ArrowLeft, ArrowRight, Loader2, X } from "lucide-react"
 import Link from "next/link"
 import { ImageUpload } from "@/components/image-upload"
 import Image from "next/image"
@@ -100,6 +100,18 @@ export default function EditProjectPage() {
                 gallery_images: [...prev.gallery_images, url]
             }))
         }
+    }
+
+    const handleMoveGalleryImage = (index: number, direction: 'left' | 'right') => {
+        if (direction === 'left' && index === 0) return;
+        if (direction === 'right' && index === formData.gallery_images.length - 1) return;
+
+        setFormData(prev => {
+            const newImages = [...prev.gallery_images];
+            const swapIndex = direction === 'left' ? index - 1 : index + 1;
+            [newImages[index], newImages[swapIndex]] = [newImages[swapIndex], newImages[index]];
+            return { ...prev, gallery_images: newImages };
+        });
     }
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -265,7 +277,27 @@ export default function EditProjectPage() {
                                         className="object-cover"
                                         alt={`Gallery image ${index + 1}`}
                                     />
-                                    <div className="absolute top-2 right-2 z-10 opacity-0 group-hover:opacity-100 transition-opacity">
+                                    <div className="absolute top-2 right-2 z-10 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1">
+                                        <Button
+                                            type="button"
+                                            onClick={() => handleMoveGalleryImage(index, 'left')}
+                                            disabled={index === 0}
+                                            variant="secondary"
+                                            size="icon"
+                                            className="h-8 w-8"
+                                        >
+                                            <ArrowLeft className="h-4 w-4" />
+                                        </Button>
+                                        <Button
+                                            type="button"
+                                            onClick={() => handleMoveGalleryImage(index, 'right')}
+                                            disabled={index === formData.gallery_images.length - 1}
+                                            variant="secondary"
+                                            size="icon"
+                                            className="h-8 w-8"
+                                        >
+                                            <ArrowRight className="h-4 w-4" />
+                                        </Button>
                                         <Button
                                             type="button"
                                             onClick={() => setFormData(prev => ({
