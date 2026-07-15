@@ -105,7 +105,7 @@ export default function ContactPage() {
                 {[
                   { icon: Mail, label: "Email Us", value: "info@atcon.com", link: "mailto:info@atcon.com" },
                   { icon: Phone, label: "Call Us", value: "+92 300 0171399", link: "tel:+923000171399" },
-                  { icon: MapPin, label: "Visit Us", value: "1st Floor, Plaza No.55/F2, Sector E, Jinnah Boulevard, DHA II, ISB., Islamabad, Pakistan", link: "https://www.google.com/maps/dir//1st+Floor+55,+2+Jinnah+Boulevard,+E+DHA,+Islamabad,+44000/@33.6297984,73.07264,10z/data=!3m1!4b1!4m8!4m7!1m0!1m5!1m1!1s0x38dfed5e92cc164b:0x7f55327c5f2b5ee0!2m2!1d73.1584079!2d33.5311394?entry=ttu&g_ep=EgoyMDI2MDExMy4wIKXMDSoKLDEwMDc5MjA2N0gBUAM%3D" }
+                  { icon: MapPin, label: "Visit Us", value: "3rd Floor, Plaza 16, Jinnah Boulevard East, Sector A, DHA II, Islamabad.", link: "https://www.google.com/maps/dir//1st+Floor+55,+2+Jinnah+Boulevard,+E+DHA,+Islamabad,+44000/@33.6297984,73.07264,10z/data=!3m1!4b1!4m8!4m7!1m0!1m5!1m1!1s0x38dfed5e92cc164b:0x7f55327c5f2b5ee0!2m2!1d73.1584079!2d33.5311394?entry=ttu&g_ep=EgoyMDI2MDExMy4wIKXMDSoKLDEwMDc5MjA2N0gBUAM%3D" }
                 ].map((item, i) => (
                   <a
                     key={i}
@@ -194,17 +194,31 @@ export default function ContactPage() {
                     </div>
                   </div>
 
-                  <div className="space-y-2">
-                    <label className="text-sm font-medium ml-1">Subject</label>
-                    <input
-                      type="text"
-                      name="subject"
-                      value={formData.subject}
-                      onChange={handleChange}
-                      required
-                      className="w-full px-5 py-3 bg-background/50 border border-border rounded-xl focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all placeholder:text-muted-foreground/50"
-                      placeholder="Project Inquiry"
-                    />
+                  <div className="grid md:grid-cols-2 gap-5">
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium ml-1">Phone</label>
+                      <input
+                        type="tel"
+                        name="phone"
+                        value={formData.phone}
+                        onChange={handleChange}
+                        required
+                        className="w-full px-5 py-3 bg-background/50 border border-border rounded-xl focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all placeholder:text-muted-foreground/50"
+                        placeholder="Your Phone Number"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium ml-1">Subject</label>
+                      <input
+                        type="text"
+                        name="subject"
+                        value={formData.subject}
+                        onChange={handleChange}
+                        required
+                        className="w-full px-5 py-3 bg-background/50 border border-border rounded-xl focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all placeholder:text-muted-foreground/50"
+                        placeholder="Project Inquiry"
+                      />
+                    </div>
                   </div>
 
                   <div className="space-y-2">
