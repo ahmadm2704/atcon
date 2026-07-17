@@ -4,6 +4,7 @@ import { useEffect, useState } from "react"
 import { motion } from "framer-motion"
 import { PageHeader } from "@/components/page-header"
 import { VideoCard } from "@/components/video-card"
+import { ShortCard } from "@/components/short-card"
 import { createClient } from "@/lib/supabase"
 import { X } from "lucide-react"
 
@@ -41,12 +42,15 @@ export default function MediaPage() {
 
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null)
 
-  // Extract unique categories from videos
-  const categories = Array.from(new Set(videos.map(v => v.category).filter(Boolean)))
+  const regularVideos = videos.filter(v => v.category !== "YouTube Shorts")
+  const shortsVideos = videos.filter(v => v.category === "YouTube Shorts")
+
+  // Extract unique categories from regular videos
+  const categories = Array.from(new Set(regularVideos.map(v => v.category).filter(Boolean)))
 
   const filteredVideos = selectedCategory
-    ? videos.filter(v => v.category === selectedCategory)
-    : videos
+    ? regularVideos.filter(v => v.category === selectedCategory)
+    : regularVideos
 
   return (
     <main className="bg-background min-h-screen">
@@ -129,6 +133,7 @@ export default function MediaPage() {
                   id={video.id}
                   title={video.title}
                   videoId={video.video_id}
+                  thumbnailUrl={video.image_url}
                   category={video.category}
                   date={new Date(video.created_at).toLocaleDateString()}
                   duration="HD"
@@ -139,6 +144,39 @@ export default function MediaPage() {
         ) : (
           <div className="text-center py-20 text-muted-foreground bg-muted/20 rounded-xl border border-border/50 border-dashed">
             <p>No videos found for this category.</p>
+          </div>
+        )}
+
+        {/* YouTube Shorts Section */}
+        {!isLoading && shortsVideos.length > 0 && (
+          <div className="mt-32">
+            <div className="text-center mb-16">
+              <h2 className="text-3xl font-bold text-foreground">YouTube Shorts</h2>
+              <div className="w-20 h-1 bg-primary mx-auto mt-4" />
+              <p className="mt-4 text-muted-foreground max-w-2xl mx-auto">
+                Quick updates, behind the scenes, and fast-paced glimpses into our operations.
+              </p>
+            </div>
+            <motion.div
+              variants={containerVariants}
+              initial="hidden"
+              whileInView="show"
+              viewport={{ once: true, margin: "-100px" }}
+              className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6"
+            >
+              {shortsVideos.map((video) => (
+                <motion.div key={video.id} variants={{ hidden: { opacity: 0, y: 20 }, show: { opacity: 1, y: 0 } }}>
+                  <ShortCard
+                    id={video.id}
+                    title={video.title}
+                    videoId={video.video_id}
+                    thumbnailUrl={video.image_url}
+                    category={video.category}
+                    date={new Date(video.created_at).toLocaleDateString()}
+                  />
+                </motion.div>
+              ))}
+            </motion.div>
           </div>
         )}
 

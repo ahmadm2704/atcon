@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react"
 import { Button } from "@/components/ui/button"
 import { createClient } from "@/lib/supabase"
-import { Plus, Trash2, Video } from "lucide-react"
+import { Plus, Trash2, Video, Pencil } from "lucide-react"
 import Link from "next/link"
 import Image from "next/image"
 
@@ -12,11 +12,13 @@ interface Media {
   title: string
   video_id: string
   category?: string
+  image_url?: string
 }
 
 export default function AdminMediaPage() {
   const [mediaItems, setMediaItems] = useState<Media[]>([])
   const [isLoading, setIsLoading] = useState(true)
+  const [selectedCategory, setSelectedCategory] = useState<string>("All")
 
   useEffect(() => {
     fetchMedia()
@@ -69,6 +71,32 @@ export default function AdminMediaPage() {
       </div>
 
       <div className="max-w-7xl mx-auto p-6">
+        {!isLoading && mediaItems.length > 0 && (
+          <div className="flex flex-wrap gap-2 mb-8 max-w-5xl">
+            {["All", ...Array.from(new Set(mediaItems.map(m => m.category).filter(Boolean)))].map((dept) => {
+              const count = dept === "All" 
+                ? mediaItems.length 
+                : mediaItems.filter(m => m.category === dept).length;
+              
+              if (count === 0 && dept !== "All") return null;
+
+              return (
+                <button
+                  key={dept}
+                  onClick={() => setSelectedCategory(dept as string)}
+                  className={`px-4 py-2 rounded-full text-xs font-bold font-heading tracking-wide uppercase transition-all duration-300 cursor-pointer border ${
+                    selectedCategory === dept
+                      ? "bg-primary text-white border-primary shadow-md"
+                      : "bg-muted/30 text-foreground/75 border-border/50 hover:bg-muted/60"
+                  }`}
+                >
+                  {dept} <span className="text-[10px] ml-1 opacity-70">({count})</span>
+                </button>
+              );
+            })}
+          </div>
+        )}
+
         {isLoading ? (
           <div className="grid md:grid-cols-3 gap-6">
             {[1, 2, 3].map((i) => (
@@ -77,12 +105,14 @@ export default function AdminMediaPage() {
           </div>
         ) : mediaItems.length > 0 ? (
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {mediaItems.map((item) => (
+            {mediaItems
+              .filter(m => selectedCategory === "All" || m.category === selectedCategory)
+              .map((item) => (
               <div key={item.id} className="group relative bg-card border border-border rounded-lg overflow-hidden flex flex-col">
-                <div className="relative aspect-video bg-muted">
-                  {item.video_id ? (
+                <div className={`relative ${item.category === "YouTube Shorts" ? "aspect-[9/16] max-w-[250px] mx-auto w-full" : "aspect-video"} bg-muted`}>
+                  {item.image_url || item.video_id ? (
                     <Image
-                      src={`https://img.youtube.com/vi/${item.video_id}/mqdefault.jpg`}
+                      src={item.image_url || `https://img.youtube.com/vi/${item.video_id}/mqdefault.jpg`}
                       alt={item.title}
                       fill
                       className="object-cover"
@@ -109,7 +139,17 @@ export default function AdminMediaPage() {
                   {item.category && <p className="text-xs text-muted-foreground mt-1 uppercase tracking-wider">{item.category}</p>}
                 </div>
 
-                <div className="p-4 pt-0 flex justify-end">
+                <div className="p-4 pt-0 flex justify-end gap-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    asChild
+                    className="h-8"
+                  >
+                    <Link href={`/admin/media/${item.id}/edit`}>
+                      <Pencil className="w-4 h-4 mr-1" /> Edit
+                    </Link>
+                  </Button>
                   <Button
                     variant="destructive"
                     size="sm"

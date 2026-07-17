@@ -1,7 +1,7 @@
 "use client"
 
-import { useState } from "react"
-import { useRouter } from "next/navigation"
+import { useState, useEffect } from "react"
+import { useRouter, useParams } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -21,8 +21,12 @@ const CATEGORIES = [
   "YouTube Shorts"
 ]
 
-export default function NewMediaPage() {
+export default function EditMediaPage() {
   const router = useRouter()
+  const params = useParams()
+  const id = params.id as string
+
+  const [isLoading, setIsLoading] = useState(true)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [formData, setFormData] = useState({
     title: "",
@@ -31,10 +35,37 @@ export default function NewMediaPage() {
     image_url: "",
   })
 
+  useEffect(() => {
+    const fetchMedia = async () => {
+      try {
+        const supabase = createClient()
+        const { data, error } = await supabase.from("media").select("*").eq("id", id).single()
+
+        if (error) throw error
+        if (data) {
+          setFormData({
+            title: data.title || "",
+            video_id: data.video_id || "",
+            category: data.category || "",
+            image_url: data.image_url || "",
+          })
+        }
+      } catch (error) {
+        console.error("Error fetching media:", error)
+        alert("Failed to load media details")
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
+    if (id) {
+      fetchMedia()
+    }
+  }, [id])
+
   // Helper to extract ID from URL if user pastes full link
   const handleVideoIdChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     let value = e.target.value
-    // Improved regex to handle shorts, watch, youtu.be etc.
     const regExp = /^.*(?:(?:youtu\.be\/|v\/|vi\/|u\/\w\/|embed\/|shorts\/)|(?:(?:watch)?\?v(?:i)?=|\&v(?:i)?=))([^#\&\?]*).*/;
     const match = value.match(regExp)
     if (match && match[1].length === 11) {
@@ -61,28 +92,35 @@ export default function NewMediaPage() {
     try {
       const supabase = createClient()
 
-      // Use custom upload or auto-fetch from YouTube oEmbed
+      // Use custom upload or auto-fetch from YouTube oEmbed if image_url is empty
+      // But if we are editing, we might already have image_url, so only auto-fetch if it's missing or if the video ID changed and we don't have a custom image.
+      // We'll just rely on the existing image_url if provided, otherwise fetch it.
       const image_url = formData.image_url || await fetchYouTubeThumbnail(formData.video_id)
 
-      const { error } = await supabase.from("media").insert([
-        {
-          title: formData.title,
-          video_id: formData.video_id,
-          category: formData.category,
-          image_url,
-          created_at: new Date().toISOString(),
-        },
-      ])
+      const { error } = await supabase.from("media").update({
+        title: formData.title,
+        video_id: formData.video_id,
+        category: formData.category,
+        image_url,
+      }).eq("id", id)
 
       if (error) throw error
       router.push("/admin/media")
       router.refresh()
     } catch (error: any) {
-      console.error("Error creating media:", error)
-      alert(`Failed to add media: ${error.message || "Unknown error"}`)
+      console.error("Error updating media:", error)
+      alert(`Failed to update media: ${error.message || "Unknown error"}`)
     } finally {
       setIsSubmitting(false)
     }
+  }
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <Loader2 className="w-8 h-8 animate-spin text-primary" />
+      </div>
+    )
   }
 
   return (
@@ -95,8 +133,8 @@ export default function NewMediaPage() {
           <ArrowLeft className="w-4 h-4 mr-2" />
           Back to Media
         </Link>
-        <h1 className="text-3xl font-bold">Add New Video</h1>
-        <p className="text-muted-foreground">Add a YouTube video to your gallery</p>
+        <h1 className="text-3xl font-bold">Edit Video</h1>
+        <p className="text-muted-foreground">Update your video gallery entry</p>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-8 bg-card p-8 rounded-lg border border-border shadow-sm">
@@ -145,7 +183,7 @@ export default function NewMediaPage() {
 
         <div className="space-y-2">
           <Label>Custom Thumbnail (Optional)</Label>
-          <p className="text-xs text-muted-foreground mb-2">Upload a custom thumbnail, highly recommended for YouTube Shorts.</p>
+          <p className="text-xs text-muted-foreground mb-2">Upload a custom thumbnail to override the default YouTube thumbnail.</p>
           <ImageUpload
             value={formData.image_url}
             onChange={(url) => setFormData({ ...formData, image_url: url })}
@@ -176,10 +214,10 @@ export default function NewMediaPage() {
             {isSubmitting ? (
               <>
                 <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                Adding Video...
+                Updating Video...
               </>
             ) : (
-              "Add Video"
+              "Update Video"
             )}
           </Button>
         </div>
