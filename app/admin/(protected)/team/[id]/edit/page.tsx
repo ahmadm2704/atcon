@@ -161,6 +161,7 @@ export default function EditTeamMemberPage({ params }: { params: Promise<{ id: s
               >
                 <option value="Planning & Scheduling">Planning & Scheduling</option>
                 <option value="Design Wing">Design Wing</option>
+                <option value="Media">Media</option>
                 <option value="Construction">Construction</option>
                 <option value="Estimation">Estimation</option>
                 <option value="Procurement">Procurement</option>

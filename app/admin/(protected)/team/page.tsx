@@ -19,6 +19,7 @@ interface TeamMember {
 const DEPARTMENTS = [
   "Planning & Scheduling",
   "Design Wing",
+  "Media",
   "Construction",
   "Estimation",
   "Procurement",
