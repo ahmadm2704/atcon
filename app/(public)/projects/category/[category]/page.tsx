@@ -16,16 +16,7 @@ interface Project {
   year?: number
 }
 
-const CATEGORIES = [
-  "Residential",
-  "Military",
-  "Mechanical Works",
-  "PEB Buildings",
-  "Highways",
-  "Educational",
-  "Sports",
-  "Religious",
-]
+import { PROJECT_CATEGORIES } from "@/lib/constants"
 
 export default function CategoryPage() {
   const params = useParams()

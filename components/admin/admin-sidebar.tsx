@@ -16,13 +16,15 @@ import {
     Star,
     ShieldCheck,
     Building2,
-    KeyRound
+    KeyRound,
+    Calendar
 } from "lucide-react"
 
 const menuItems = [
     { icon: LayoutGrid, label: "Dashboard", href: "/admin/dashboard" },
     { icon: ImageIcon, label: "Hero Section", href: "/admin/hero" },
     { icon: Briefcase, label: "Projects", href: "/admin/projects" },
+    { icon: Calendar, label: "Events", href: "/admin/events" },
     { icon: Users, label: "Team Members", href: "/admin/team" },
     { icon: ImageIcon, label: "Media", href: "/admin/media" },
     { icon: Settings, label: "Services", href: "/admin/services" },

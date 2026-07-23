@@ -15,16 +15,7 @@ interface Project {
   year?: number
 }
 
-const CATEGORIES = [
-  "Residential",
-  "Military",
-  "Mechanical Works",
-  "PEB Buildings",
-  "Highways",
-  "Educational",
-  "Sports",
-  "Religious",
-]
+import { PROJECT_CATEGORIES } from "@/lib/constants"
 
 export default function ProjectsPage() {
   const [projects, setProjects] = useState<Project[]>([])
@@ -35,7 +26,7 @@ export default function ProjectsPage() {
     const fetchProjects = async () => {
       try {
         const supabase = createClient()
-        let query = supabase.from("projects").select("*").order("order_index", { ascending: true })
+        let query = supabase.from("projects").select("*").neq("category", "Events").order("order_index", { ascending: true })
 
         if (selectedCategory) {
           query = query.eq("category", selectedCategory)
@@ -104,7 +95,7 @@ export default function ProjectsPage() {
             <span className="relative z-10">All Projects</span>
           </button>
 
-          {CATEGORIES.map((category) => (
+          {PROJECT_CATEGORIES.map((category) => (
             <button
               key={category}
               onClick={() => setSelectedCategory(category)}

@@ -11,15 +11,7 @@ import Link from "next/link"
 import Image from "next/image"
 import { ImageUpload } from "@/components/image-upload"
 
-const CATEGORIES = [
-  "Education",
-  "Residential",
-  "Institutional",
-  "Commercial",
-  "Development",
-  "Events",
-  "YouTube Shorts"
-]
+import { MEDIA_CATEGORIES } from "@/lib/constants"
 
 export default function EditMediaPage() {
   const router = useRouter()
@@ -201,7 +193,7 @@ export default function EditMediaPage() {
             required
           >
             <option value="">Select Category</option>
-            {CATEGORIES.map((cat) => (
+            {MEDIA_CATEGORIES.map((cat) => (
               <option key={cat} value={cat}>
                 {cat}
               </option>

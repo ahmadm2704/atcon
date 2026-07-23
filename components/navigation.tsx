@@ -27,6 +27,7 @@ export function Navigation() {
     { label: "HOME", href: "/" },
     { label: "PROJECTS UNDERTAKEN", href: "/projects" },
     { label: "TEAM", href: "/team" },
+    { label: "EVENTS", href: "/events" },
     { label: "MEDIA", href: "/media" },
     { label: "CONTACT US", href: "/contact" },
   ]
@@ -71,6 +72,12 @@ export function Navigation() {
               className={`text-sm font-bold font-heading tracking-widest hover:text-primary transition-colors uppercase ${useDarkStyle ? "text-foreground dark:text-white" : "text-white"}`}
             >
               Team
+            </Link>
+
+            <Link href="/events"
+              className={`text-sm font-bold font-heading tracking-widest hover:text-primary transition-colors uppercase ${useDarkStyle ? "text-foreground dark:text-white" : "text-white"}`}
+            >
+              Events
             </Link>
 
             <Link href="/media"

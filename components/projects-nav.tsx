@@ -4,16 +4,7 @@ import Link from "next/link"
 import { useState, useRef, useEffect } from "react"
 import { ChevronDown } from "lucide-react"
 
-const CATEGORIES = [
-  "Residential",
-  "Military",
-  "Mechanical Works",
-  "PEB Buildings",
-  "Highways",
-  "Educational",
-  "Sports",
-  "Religious",
-]
+import { PROJECT_CATEGORIES } from "@/lib/constants"
 
 export function ProjectsNav({ scrolled }: { scrolled?: boolean }) {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
@@ -47,7 +38,7 @@ export function ProjectsNav({ scrolled }: { scrolled?: boolean }) {
         className="hidden md:block absolute left-0 top-full pt-2 w-56 transition-all duration-300 transform origin-top z-50 opacity-0 scale-95 invisible group-hover:opacity-100 group-hover:scale-100 group-hover:visible"
       >
         <div className="bg-card border border-border dark:border-white/10 rounded-sm shadow-xl overflow-hidden">
-          {CATEGORIES.map((category) => (
+          {PROJECT_CATEGORIES.map((category) => (
             <Link
               key={category}
               href={`/projects/category/${encodeURIComponent(category)}`}
@@ -62,7 +53,7 @@ export function ProjectsNav({ scrolled }: { scrolled?: boolean }) {
       {/* Mobile Dropdown */}
       {isDropdownOpen && (
         <div className="md:hidden mt-2 ml-4 border-l border-white/10 pl-4 space-y-1">
-          {CATEGORIES.map((category) => (
+          {PROJECT_CATEGORIES.map((category) => (
             <Link
               key={category}
               href={`/projects/category/${encodeURIComponent(category)}`}

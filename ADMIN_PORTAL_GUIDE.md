@@ -25,6 +25,7 @@ Visit: `http://localhost:3000/admin/login`
   - View all projects organized by category
   - Create new projects with the following categories:
     - Residential
+    - Commercial
     - Military
     - Mechanical Works
     - PEB Buildings
@@ -36,6 +37,14 @@ Visit: `http://localhost:3000/admin/login`
   - Upload project images
   - Delete projects
   - **Access:** Click "Projects" in admin dashboard or navigate to `/admin/projects`
+
+### 2b. Events Management
+- **Location:** `/admin/events`
+- **Features:**
+  - Create and manage events you have organized or attended.
+  - Automatically syncs with the public Events page.
+  - Note: Under the hood, this uses the projects database table to prevent data disruption.
+  - **Access:** Navigate to `/admin/events`
 
 ### 3. Team Management
 - **Location:** `/admin/team`
@@ -105,7 +114,7 @@ The website uses Supabase PostgreSQL database with the following tables:
 2. Click "Add New Project"
 3. Fill in project details:
    - Project name
-   - Category (from the 8 predefined categories)
+   - Category (from the 9 predefined categories)
    - Description
    - Location
    - Year completed
