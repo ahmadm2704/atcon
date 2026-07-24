@@ -101,8 +101,8 @@ export function Navigation() {
           {/* Desktop Right Items */}
           <div className="hidden md:flex items-center gap-4">
             <ModeToggle className={useDarkStyle ? "text-foreground dark:text-white" : "text-white"} />
-            <Button className="font-bold tracking-wider bg-[var(--primary)] hover:bg-[var(--primary)]/90 text-white rounded-sm shadow-lg shadow-red-900/20">
-              GET IN TOUCH
+            <Button asChild className="font-bold tracking-wider bg-[var(--primary)] hover:bg-[var(--primary)]/90 text-white rounded-sm shadow-lg shadow-red-900/20">
+              <Link href="/contact">GET IN TOUCH</Link>
             </Button>
           </div>
 

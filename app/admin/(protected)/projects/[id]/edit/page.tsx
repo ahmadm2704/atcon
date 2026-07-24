@@ -261,11 +261,11 @@ export default function EditProjectPage() {
                     {formData.gallery_images.length > 0 && (
                         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                             {formData.gallery_images.map((url, index) => (
-                                <div key={index} className="relative w-full h-32 rounded-lg overflow-hidden border border-border bg-muted group">
+                                <div key={index} className="relative w-full aspect-[9/16] rounded-lg overflow-hidden border border-border bg-muted group">
                                     <Image
                                         src={url}
                                         fill
-                                        className="object-cover"
+                                        className="object-fill"
                                         alt={`Gallery image ${index + 1}`}
                                     />
                                     <div className="absolute top-2 right-2 z-10 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1">

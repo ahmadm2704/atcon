@@ -227,13 +227,13 @@ export default function ProjectDetailPage() {
                   <div
                     key={idx}
                     onClick={() => setActiveImage(image)}
-                    className="relative w-full aspect-square rounded-lg overflow-hidden border border-border bg-muted cursor-pointer group shadow-md hover:shadow-xl hover:border-primary/50 transition-all duration-300"
+                    className="relative w-full aspect-[9/16] rounded-lg overflow-hidden border border-border bg-muted cursor-pointer group shadow-md hover:shadow-xl hover:border-primary/50 transition-all duration-300"
                   >
                     <Image
                       src={image}
                       alt={`${project.title} Gallery ${idx + 1}`}
                       fill
-                      className="object-cover transform group-hover:scale-105 transition-transform duration-500"
+                      className="object-fill transform group-hover:scale-105 transition-transform duration-500"
                     />
                     {/* Glassmorphic hover overlay */}
                     <div className="absolute inset-0 bg-black/40 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 flex items-center justify-center transition-all duration-300">
