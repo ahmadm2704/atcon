@@ -103,7 +103,7 @@ export default function ContactPage() {
 
               <div className="grid gap-6">
                 {[
-                  { icon: Mail, label: "Email Us", value: "info@atcon.com", link: "mailto:info@atcon.com" },
+                  { icon: Mail, label: "Email Us", value: "kohatian3597@gmail.com", link: "mailto:kohatian3597@gmail.com" },
                   { icon: Phone, label: "Call Us", value: "+92 300 0171399", link: "tel:+923000171399" },
                   { icon: MapPin, label: "Visit Us", value: "3rd Floor, Plaza 16, Jinnah Boulevard East, Sector A, DHA II, Islamabad.", link: "https://www.google.com/maps/dir//1st+Floor+55,+2+Jinnah+Boulevard,+E+DHA,+Islamabad,+44000/@33.6297984,73.07264,10z/data=!3m1!4b1!4m8!4m7!1m0!1m5!1m1!1s0x38dfed5e92cc164b:0x7f55327c5f2b5ee0!2m2!1d73.1584079!2d33.5311394?entry=ttu&g_ep=EgoyMDI2MDExMy4wIKXMDSoKLDEwMDc5MjA2N0gBUAM%3D" }
                 ].map((item, i) => (

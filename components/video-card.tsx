@@ -109,13 +109,22 @@ export function VideoCard({ title, videoId, thumbnailUrl, date, duration, catego
                         onClick={() => setIsOpen(false)}
                     >
                         <div className="relative w-full max-w-5xl aspect-video bg-black rounded-2xl overflow-hidden shadow-2xl border border-white/10" onClick={(e) => e.stopPropagation()}>
-                            <iframe
-                                src={`https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0`}
-                                title={title}
-                                className="absolute inset-0 w-full h-full"
-                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                allowFullScreen
-                            />
+                            {videoId.startsWith('http') ? (
+                                <video
+                                    src={videoId}
+                                    className="absolute inset-0 w-full h-full"
+                                    controls
+                                    autoPlay
+                                />
+                            ) : (
+                                <iframe
+                                    src={`https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0`}
+                                    title={title}
+                                    className="absolute inset-0 w-full h-full"
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                    allowFullScreen
+                                />
+                            )}
                             <button
                                 onClick={() => setIsOpen(false)}
                                 className="absolute top-4 right-4 p-2 rounded-full bg-black/50 hover:bg-black/70 text-white transition-colors backdrop-blur-sm border border-white/10"

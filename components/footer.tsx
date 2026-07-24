@@ -39,15 +39,17 @@ export function Footer() {
             <ul className="space-y-4">
               <li className="flex items-start gap-3 text-muted-foreground dark:text-gray-400">
                 <MapPin className="w-5 h-5 text-primary shrink-0 mt-1" />
-                <span>3rd Floor, Plaza 16, Jinnah Boulevard East, Sector A, DHA II, Islamabad.</span>
+                <a href="https://www.google.com/maps/dir//1st+Floor+55,+2+Jinnah+Boulevard,+E+DHA,+Islamabad,+44000/@33.6297984,73.07264,10z/data=!3m1!4b1!4m8!4m7!1m0!1m5!1m1!1s0x38dfed5e92cc164b:0x7f55327c5f2b5ee0!2m2!1d73.1584079!2d33.5311394?entry=ttu&g_ep=EgoyMDI2MDExMy4wIKXMDSoKLDEwMDc5MjA2N0gBUAM%3D" target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors">
+                  3rd Floor, Plaza 16, Jinnah Boulevard East, Sector A, DHA II, Islamabad.
+                </a>
               </li>
               <li className="flex items-center gap-3 text-muted-foreground dark:text-gray-400">
                 <Phone className="w-5 h-5 text-primary shrink-0" />
-                <span>+92 300 0171399</span>
+                <a href="tel:+923000171399" className="hover:text-primary transition-colors">+92 300 0171399</a>
               </li>
               <li className="flex items-center gap-3 text-muted-foreground dark:text-gray-400">
                 <Mail className="w-5 h-5 text-primary shrink-0" />
-                <span>info@atcon.com</span>
+                <a href="mailto:kohatian3597@gmail.com" className="hover:text-primary transition-colors">kohatian3597@gmail.com</a>
               </li>
             </ul>
           </div>

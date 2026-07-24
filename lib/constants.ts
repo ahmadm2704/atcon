@@ -19,7 +19,8 @@ export const MEDIA_CATEGORIES = [
   "Commercial",
   "Development",
   "Events",
-  "YouTube Shorts"
+  "YouTube Shorts",
+  "Client Reviews"
 ] as const;
 
 export type MediaCategory = typeof MEDIA_CATEGORIES[number];

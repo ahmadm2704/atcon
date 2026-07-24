@@ -25,12 +25,12 @@ export function IntroAnimation() {
                     exit={{ opacity: 0 }}
                     transition={{ duration: 1, ease: "easeInOut" }}
                 >
-                    <div className="relative w-full max-w-md aspect-square flex flex-col items-center justify-center">
+                    <div className="relative w-full max-w-5xl aspect-square flex flex-col items-center justify-center">
                         <motion.div
                             initial={{ scale: 0.8, opacity: 0, filter: "blur(10px)" }}
                             animate={{ scale: 1, opacity: 1, filter: "blur(0px)" }}
                             transition={{ duration: 1.5, ease: "easeOut" }}
-                            className="relative w-64 h-24 md:w-80 md:h-32 mb-8"
+                            className="relative w-[80vw] h-[25vw] max-w-3xl max-h-64 mb-8"
                         >
                             <Image
                                 src="/logo.png"

@@ -29,6 +29,7 @@ export function Navigation() {
     { label: "TEAM", href: "/team" },
     { label: "EVENTS", href: "/events" },
     { label: "MEDIA", href: "/media" },
+    { label: "REVIEWS", href: "/reviews" },
     { label: "CONTACT US", href: "/contact" },
   ]
 
@@ -84,6 +85,11 @@ export function Navigation() {
               className={`text-sm font-bold font-heading tracking-widest hover:text-primary transition-colors uppercase ${useDarkStyle ? "text-foreground dark:text-white" : "text-white"}`}
             >
               Media
+            </Link>
+            <Link href="/reviews"
+              className={`text-sm font-bold font-heading tracking-widest hover:text-primary transition-colors uppercase ${useDarkStyle ? "text-foreground dark:text-white" : "text-white"}`}
+            >
+              Reviews
             </Link>
             <Link href="/contact"
               className={`text-sm font-bold font-heading tracking-widest hover:text-primary transition-colors uppercase ${useDarkStyle ? "text-foreground dark:text-white" : "text-white"}`}

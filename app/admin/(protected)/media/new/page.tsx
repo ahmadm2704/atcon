@@ -10,12 +10,14 @@ import { ArrowLeft, Loader2, Video } from "lucide-react"
 import Link from "next/link"
 import Image from "next/image"
 import { ImageUpload } from "@/components/image-upload"
+import { VideoUpload } from "@/components/video-upload"
 
 import { MEDIA_CATEGORIES } from "@/lib/constants"
 
 export default function NewMediaPage() {
   const router = useRouter()
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [videoType, setVideoType] = useState<"youtube" | "local">("youtube")
   const [formData, setFormData] = useState({
     title: "",
     video_id: "",
@@ -103,37 +105,78 @@ export default function NewMediaPage() {
           />
         </div>
 
-        <div className="space-y-2">
-          <Label htmlFor="video_id">YouTube Video ID (or URL) *</Label>
-          <div className="flex gap-2">
-            <div className="relative flex-1">
-              <Video className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
-              <Input
-                id="video_id"
+        <div className="space-y-4 border rounded-xl p-4 bg-muted/20">
+          <div className="flex gap-2 p-1 bg-muted rounded-lg w-fit mb-4">
+            <button
+                type="button"
+                onClick={() => setVideoType("youtube")}
+                className={`px-3 py-1.5 text-sm font-medium rounded-md transition-colors ${videoType === "youtube"
+                    ? "bg-background text-foreground shadow-sm"
+                    : "text-muted-foreground hover:text-foreground"
+                    }`}
+            >
+                YouTube Link
+            </button>
+            <button
+                type="button"
+                onClick={() => {
+                  setVideoType("local")
+                  setFormData({ ...formData, video_id: "" })
+                }}
+                className={`px-3 py-1.5 text-sm font-medium rounded-md transition-colors ${videoType === "local"
+                    ? "bg-background text-foreground shadow-sm"
+                    : "text-muted-foreground hover:text-foreground"
+                    }`}
+            >
+                Local Upload
+            </button>
+          </div>
+
+          {videoType === "youtube" ? (
+            <>
+              <div className="space-y-2">
+                <Label htmlFor="video_id">YouTube Video ID (or URL) *</Label>
+                <div className="flex gap-2">
+                  <div className="relative flex-1">
+                    <Video className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
+                    <Input
+                      id="video_id"
+                      value={formData.video_id}
+                      onChange={handleVideoIdChange}
+                      placeholder="e.g. dQw4w9WgXcQ"
+                      className="pl-9"
+                      required={videoType === "youtube"}
+                    />
+                  </div>
+                </div>
+                <p className="text-xs text-muted-foreground">Paste the video ID (11 characters) or the full YouTube URL.</p>
+              </div>
+
+              {formData.video_id && formData.video_id.length === 11 && !formData.image_url && (
+                <div className="relative aspect-video w-full rounded-lg overflow-hidden border border-border">
+                  <Image
+                    src={`https://img.youtube.com/vi/${formData.video_id}/mqdefault.jpg`}
+                    alt="Preview"
+                    fill
+                    className="object-cover"
+                  />
+                  <div className="absolute inset-0 flex items-center justify-center bg-black/20">
+                    <span className="text-white text-xs bg-black/50 px-2 py-1 rounded">Default YouTube Thumbnail Preview</span>
+                  </div>
+                </div>
+              )}
+            </>
+          ) : (
+            <div className="space-y-2">
+              <Label>Upload Video File *</Label>
+              <VideoUpload
                 value={formData.video_id}
-                onChange={handleVideoIdChange}
-                placeholder="e.g. dQw4w9WgXcQ"
-                className="pl-9"
-                required
+                onChange={(url) => setFormData({ ...formData, video_id: url })}
+                disabled={isSubmitting}
               />
             </div>
-          </div>
-          <p className="text-xs text-muted-foreground">Paste the video ID (11 characters) or the full YouTube URL.</p>
+          )}
         </div>
-
-        {formData.video_id && formData.video_id.length === 11 && !formData.image_url && (
-          <div className="relative aspect-video w-full rounded-lg overflow-hidden border border-border">
-            <Image
-              src={`https://img.youtube.com/vi/${formData.video_id}/mqdefault.jpg`}
-              alt="Preview"
-              fill
-              className="object-cover"
-            />
-            <div className="absolute inset-0 flex items-center justify-center bg-black/20">
-              <span className="text-white text-xs bg-black/50 px-2 py-1 rounded">Default YouTube Thumbnail Preview</span>
-            </div>
-          </div>
-        )}
 
         <div className="space-y-2">
           <Label>Custom Thumbnail (Optional)</Label>
